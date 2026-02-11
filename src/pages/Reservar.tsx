@@ -11,6 +11,10 @@ import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { toast } from "sonner";
+import { z } from "zod";
+
+const clientNameSchema = z.string().trim().min(1, "El nombre es obligatorio").max(100, "Máximo 100 caracteres");
+const clientPhoneSchema = z.string().trim().min(1, "El teléfono es obligatorio").max(20, "Máximo 20 caracteres").regex(/^[0-9+\-() ]+$/, "Formato de teléfono inválido");
 
 const timeSlots = [
   "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
@@ -29,6 +33,8 @@ const Reservar = () => {
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [clientName, setClientName] = useState("");
   const [clientPhone, setClientPhone] = useState("");
+  const [nameError, setNameError] = useState("");
+  const [phoneError, setPhoneError] = useState("");
 
   const { data: barbers } = useQuery({
     queryKey: ["barbers"],
@@ -81,6 +87,11 @@ const Reservar = () => {
 
   const handleNext = () => {
     if (step === 3) {
+      const nameResult = clientNameSchema.safeParse(clientName);
+      const phoneResult = clientPhoneSchema.safeParse(clientPhone);
+      setNameError(nameResult.success ? "" : nameResult.error.errors[0].message);
+      setPhoneError(phoneResult.success ? "" : phoneResult.error.errors[0].message);
+      if (!nameResult.success || !phoneResult.success) return;
       createAppointment.mutate();
     } else {
       setStep(s => s + 1);
@@ -243,11 +254,13 @@ const Reservar = () => {
                   <div className="max-w-md space-y-6">
                     <div>
                       <label className="text-sm text-muted-foreground mb-2 block">Nombre</label>
-                      <Input value={clientName} onChange={(e) => setClientName(e.target.value)} placeholder="Tu nombre" className="rounded-none" />
+                      <Input value={clientName} onChange={(e) => { setClientName(e.target.value); setNameError(""); }} placeholder="Tu nombre" className="rounded-none" maxLength={100} />
+                      {nameError && <p className="text-xs text-destructive mt-1">{nameError}</p>}
                     </div>
                     <div>
                       <label className="text-sm text-muted-foreground mb-2 block">WhatsApp</label>
-                      <Input value={clientPhone} onChange={(e) => setClientPhone(e.target.value)} placeholder="+54 11 1234-5678" className="rounded-none" />
+                      <Input value={clientPhone} onChange={(e) => { setClientPhone(e.target.value); setPhoneError(""); }} placeholder="+54 11 1234-5678" className="rounded-none" maxLength={20} />
+                      {phoneError && <p className="text-xs text-destructive mt-1">{phoneError}</p>}
                     </div>
                   </div>
                 </div>
