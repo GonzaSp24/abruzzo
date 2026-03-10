@@ -13,6 +13,7 @@ import { LogOut, Loader2, Trash2, CheckCircle, XCircle, Plus } from "lucide-reac
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
+import Dashboard from "@/components/admin/Dashboard";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger,
 } from "@/components/ui/dialog";
@@ -173,12 +174,22 @@ const Admin = () => {
       </div>
 
       <div className="max-w-6xl mx-auto px-6 py-8">
-        <Tabs defaultValue="turnos">
+        <Tabs defaultValue="dashboard">
           <TabsList className="mb-8">
+            <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
             <TabsTrigger value="turnos">Turnos ({upcomingAppointments.length})</TabsTrigger>
             <TabsTrigger value="barberos">Barberos</TabsTrigger>
             <TabsTrigger value="servicios">Servicios</TabsTrigger>
           </TabsList>
+
+          {/* Dashboard */}
+          <TabsContent value="dashboard">
+            <Dashboard
+              appointments={appointments || []}
+              barbers={barbers || []}
+              services={services || []}
+            />
+          </TabsContent>
 
           {/* Appointments */}
           <TabsContent value="turnos">
