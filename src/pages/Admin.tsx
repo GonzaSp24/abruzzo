@@ -13,6 +13,7 @@ import { LogOut, Loader2, Trash2, CheckCircle, XCircle, Plus } from "lucide-reac
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
+import Dashboard from "@/components/admin/Dashboard";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger,
 } from "@/components/ui/dialog";
