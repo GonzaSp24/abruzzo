@@ -174,12 +174,22 @@ const Admin = () => {
       </div>
 
       <div className="max-w-6xl mx-auto px-6 py-8">
-        <Tabs defaultValue="turnos">
+        <Tabs defaultValue="dashboard">
           <TabsList className="mb-8">
+            <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
             <TabsTrigger value="turnos">Turnos ({upcomingAppointments.length})</TabsTrigger>
             <TabsTrigger value="barberos">Barberos</TabsTrigger>
             <TabsTrigger value="servicios">Servicios</TabsTrigger>
           </TabsList>
+
+          {/* Dashboard */}
+          <TabsContent value="dashboard">
+            <Dashboard
+              appointments={appointments || []}
+              barbers={barbers || []}
+              services={services || []}
+            />
+          </TabsContent>
 
           {/* Appointments */}
           <TabsContent value="turnos">
